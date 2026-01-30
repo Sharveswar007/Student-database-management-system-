@@ -73,6 +73,8 @@ export interface ActionResponse<T = any> {
 // Dashboard statistics
 export interface DashboardStats {
     total_students: number;
-    active_students: number;
-    departments: { department: string; count: number }[];
+    total_courses: number;
+    total_enrollments: number;
+    students_by_class: { class: string; count: number }[];
+    recent_students: Student[];
 }
