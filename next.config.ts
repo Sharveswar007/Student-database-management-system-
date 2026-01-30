@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   },
 
   // Configure for Electron
-  trailingSlash: true,
+  // trailingSlash: true,
 };
 
 export default nextConfig;
