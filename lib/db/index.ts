@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from 'pg';
+import { Pool, QueryResult, QueryResultRow } from 'pg';
 
 if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL is not defined in environment variables');
@@ -14,7 +14,7 @@ export const pool = new Pool({
 });
 
 // Helper function for executing SQL queries with parameterized values
-export async function query<T = any>(
+export async function query<T extends QueryResultRow = any>(
     text: string,
     params?: any[]
 ): Promise<QueryResult<T>> {
