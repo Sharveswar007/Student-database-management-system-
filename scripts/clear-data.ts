@@ -1,4 +1,4 @@
-// Clear all sample data from the database
+// Clear all data from the database
 // Run with: npx tsx scripts/clear-data.ts
 
 import { Pool } from 'pg';
@@ -26,23 +26,23 @@ async function clearData() {
 
         console.log('🗑️  Clearing all data...');
 
-        // Delete in correct order (respecting foreign keys)
+        // Delete in correct order (child tables first, respecting FK constraints)
+        await client.query('DELETE FROM fee_records');
+        await client.query('DELETE FROM assessments');
         await client.query('DELETE FROM attendance');
-        await client.query('DELETE FROM enrollments');
+        await client.query('DELETE FROM academic_records');
+        await client.query('DELETE FROM guardians');
         await client.query('DELETE FROM students');
-        await client.query('DELETE FROM courses');
 
         console.log('✅ All data cleared!');
 
         // Verify
-        const counts = await Promise.all([
-            client.query('SELECT COUNT(*)::int as count FROM students'),
-            client.query('SELECT COUNT(*)::int as count FROM courses'),
-        ]);
-
+        const tables = ['students', 'guardians', 'academic_records', 'attendance', 'assessments', 'fee_records'];
         console.log('\n📈 Current data:');
-        console.log(`   - Students: ${counts[0].rows[0].count}`);
-        console.log(`   - Courses: ${counts[1].rows[0].count}`);
+        for (const table of tables) {
+            const countResult = await client.query(`SELECT COUNT(*)::int as count FROM ${table}`);
+            console.log(`   - ${table}: ${countResult.rows[0].count}`);
+        }
 
         client.release();
         console.log('\n✅ Database is now empty. Add real data through the app!');

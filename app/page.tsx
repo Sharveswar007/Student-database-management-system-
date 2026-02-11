@@ -202,18 +202,16 @@ export default function HomePage() {
               <p style={{ fontSize: '14px', fontWeight: '600', color: isDark ? '#a1a1aa' : '#71717a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Comprehensive Data Coverage
               </p>
-              <div style={{ fontSize: '12px', color: '#6366f1', fontWeight: '600' }}>7 Categories</div>
+              <div style={{ fontSize: '12px', color: '#6366f1', fontWeight: '600' }}>6 Tables</div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '12px' }}>
               {[
-                { icon: '👤', label: 'Personal' },
+                { icon: '👤', label: 'Students' },
+                { icon: '👨‍👩‍👧', label: 'Guardians' },
                 { icon: '🎓', label: 'Academic' },
                 { icon: '📅', label: 'Attendance' },
-                { icon: '📝', label: 'Assessment' },
-                { icon: '💰', label: 'Financial' },
-                { icon: '📄', label: 'Documents' },
-                { icon: '📚', label: 'Library' },
-                { icon: '⚽', label: 'Activities' }
+                { icon: '📝', label: 'Assessments' },
+                { icon: '💰', label: 'Fee Records' },
               ].map(item => (
                 <div key={item.label} style={{
                   padding: '12px',

@@ -26,18 +26,16 @@ async function resetDatabase() {
         const client = await pool.connect();
         console.log('✅ Connected!');
 
-        // Drop all old tables
+        // Drop all tables (child tables first due to FK constraints)
         console.log('🗑️  Dropping old tables...');
         await client.query(`
+      DROP TABLE IF EXISTS fee_records CASCADE;
+      DROP TABLE IF EXISTS assessments CASCADE;
       DROP TABLE IF EXISTS attendance CASCADE;
+      DROP TABLE IF EXISTS academic_records CASCADE;
+      DROP TABLE IF EXISTS guardians CASCADE;
       DROP TABLE IF EXISTS enrollments CASCADE;
       DROP TABLE IF EXISTS courses CASCADE;
-      DROP TABLE IF EXISTS order_items CASCADE;
-      DROP TABLE IF EXISTS orders CASCADE;
-      DROP TABLE IF EXISTS reviews CASCADE;
-      DROP TABLE IF EXISTS products CASCADE;
-      DROP TABLE IF EXISTS categories CASCADE;
-      DROP TABLE IF EXISTS users CASCADE;
       DROP TABLE IF EXISTS students CASCADE;
     `);
         console.log('✅ Old tables dropped!');
@@ -46,7 +44,7 @@ async function resetDatabase() {
         const schemaPath = path.join(__dirname, '..', 'lib', 'db', 'schema.sql');
         const schema = fs.readFileSync(schemaPath, 'utf-8');
 
-        console.log('🔄 Creating new schema...');
+        console.log('🔄 Creating new schema (6 normalized tables)...');
         await client.query(schema);
         console.log('✅ Schema created!');
 
@@ -65,7 +63,7 @@ async function resetDatabase() {
 
         client.release();
         console.log('\n🎉 Database reset complete!');
-        console.log('   You now have a single "students" table with all required columns.');
+        console.log('   You now have 6 normalized tables: students, guardians, academic_records, attendance, assessments, fee_records');
     } catch (error: any) {
         console.error('❌ Error:', error.message);
         process.exit(1);

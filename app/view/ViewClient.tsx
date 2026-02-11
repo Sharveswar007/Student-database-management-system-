@@ -3,14 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { deleteStudent } from '@/lib/actions/students';
-import { Student } from '@/lib/types';
+import { StudentFull } from '@/lib/types';
 
 interface ViewClientProps {
-    initialStudents: Student[];
+    initialStudents: StudentFull[];
 }
 
 export default function ViewClient({ initialStudents }: ViewClientProps) {
-    const [students, setStudents] = useState<Student[]>(initialStudents);
+    const [students, setStudents] = useState<StudentFull[]>(initialStudents);
     const [searchTerm, setSearchTerm] = useState('');
     const [expandedId, setExpandedId] = useState<number | null>(null);
     const [isDeleting, setIsDeleting] = useState<number | null>(null);
@@ -271,13 +271,15 @@ export default function ViewClient({ initialStudents }: ViewClientProps) {
                                                 </div>
                                             </div>
 
-                                            {/* Other */}
+                                            {/* Financial */}
                                             <div>
-                                                <h4 style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', color: '#6366f1', marginBottom: '16px', letterSpacing: '0.05em' }}>Other</h4>
+                                                <h4 style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', color: '#6366f1', marginBottom: '16px', letterSpacing: '0.05em' }}>Financial</h4>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                    <InfoRow label="Total Fees" value={`₹${student.total_fees}`} />
+                                                    <InfoRow label="Fees Paid" value={`₹${student.fees_paid}`} />
                                                     <InfoRow label="Pending Dues" value={`₹${student.pending_dues}`} />
+                                                    <InfoRow label="Payment Status" value={student.payment_status} />
                                                     <InfoRow label="Scholarship" value={student.scholarship_amount ? `₹${student.scholarship_amount}` : '-'} />
-                                                    <InfoRow label="Library Card" value={student.library_card_number} />
                                                 </div>
                                                 <div style={{ marginTop: '24px' }}>
                                                     <button

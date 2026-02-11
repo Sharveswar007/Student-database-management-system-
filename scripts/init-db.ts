@@ -51,15 +51,13 @@ async function initDatabase() {
             console.log(`   ✓ ${row.table_name}`);
         });
 
-        // Count student data
-        const counts = await Promise.all([
-            client.query('SELECT COUNT(*)::int as count FROM students'),
-            client.query('SELECT COUNT(*)::int as count FROM courses'),
-        ]);
-
+        // Count data in each table
+        const tables = ['students', 'guardians', 'academic_records', 'attendance', 'assessments', 'fee_records'];
         console.log('\n📈 Data counts:');
-        console.log(`   - Students: ${counts[0].rows[0].count}`);
-        console.log(`   - Courses: ${counts[1].rows[0].count}`);
+        for (const table of tables) {
+            const countResult = await client.query(`SELECT COUNT(*)::int as count FROM ${table}`);
+            console.log(`   - ${table}: ${countResult.rows[0].count}`);
+        }
 
         client.release();
         console.log('\n🎉 Database initialization complete!');

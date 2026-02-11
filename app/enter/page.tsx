@@ -44,10 +44,7 @@ export default function EnterDataPage() {
         classes_attended: '', total_classes: '',
         internal_marks: '', quiz_marks: '', semester_marks: '', total_marks: '', grade: '',
         total_fees: '', fees_paid: '', scholarship_amount: '', scholarship_type: '',
-        admission_date: '', admission_form_submitted: false,
-        id_proof_submitted: false, certificates_submitted: false,
-        library_card_number: '', books_issued: '',
-        disciplinary_remarks: '', club_memberships: '', extracurricular_activities: '',
+        admission_date: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -79,7 +76,6 @@ export default function EnterDataPage() {
             total_fees: Number(form.total_fees) || 0,
             fees_paid: Number(form.fees_paid) || 0,
             scholarship_amount: Number(form.scholarship_amount) || 0,
-            books_issued: Number(form.books_issued) || 0,
         });
 
         setIsLoading(false);
@@ -152,7 +148,7 @@ export default function EnterDataPage() {
 
                     {/* Navigation Tabs (Optional visual aid) */}
                     <div className="animate-slide-up" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
-                        {['Personal', 'Academic', 'Attendance', 'Assessment', 'Financial', 'Documents', 'Admin'].map((section, idx) => (
+                        {['Personal', 'Academic', 'Attendance', 'Assessment', 'Financial'].map((section, idx) => (
                             <div key={idx} style={{
                                 padding: '8px 16px',
                                 borderRadius: '9999px',
@@ -359,40 +355,15 @@ export default function EnterDataPage() {
                         </div>
                     </section>
 
-                    {/* Documents & Admin */}
+                    {/* Admission Date */}
                     <section className="card animate-slide-up delay-300" style={{ padding: '24px' }}>
                         <h3 className="section-title">
-                            <span>🗂️</span> Documents & Administrative
+                            <span>📅</span> Admission Details
                         </h3>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '24px' }}>
                             <div>
                                 <label className="label">Admission Date</label>
                                 <input className="input" name="admission_date" type="date" value={form.admission_date} onChange={handleChange} />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                <label className="label">Submitted Documents</label>
-                                <div style={{ display: 'flex', gap: '16px' }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                                        <input type="checkbox" name="admission_form_submitted" checked={form.admission_form_submitted} onChange={handleChange} style={{ width: '16px', height: '16px' }} />
-                                        Admission Form
-                                    </label>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                                        <input type="checkbox" name="id_proof_submitted" checked={form.id_proof_submitted} onChange={handleChange} style={{ width: '16px', height: '16px' }} />
-                                        ID Proof
-                                    </label>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                                        <input type="checkbox" name="certificates_submitted" checked={form.certificates_submitted} onChange={handleChange} style={{ width: '16px', height: '16px' }} />
-                                        Certificates
-                                    </label>
-                                </div>
-                            </div>
-                            <div>
-                                <label className="label">Library Card</label>
-                                <input className="input" name="library_card_number" value={form.library_card_number} onChange={handleChange} placeholder="Card #" />
-                            </div>
-                            <div>
-                                <label className="label">Activities</label>
-                                <input className="input" name="extracurricular_activities" value={form.extracurricular_activities} onChange={handleChange} placeholder="Activities" />
                             </div>
                         </div>
                     </section>
