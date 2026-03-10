@@ -144,8 +144,11 @@ export async function createStudent(data: Partial<StudentFull>): Promise<ActionR
         );
 
         // 4. Insert into attendance
-        const attendancePercentage = data.total_classes && Number(data.total_classes) > 0
-            ? ((Number(data.classes_attended) || 0) / Number(data.total_classes)) * 100
+        // Clamp to >= 0 to satisfy chk_classes_positive / chk_attendance_pct constraints
+        const classesAttended = Math.max(0, Number(data.classes_attended) || 0);
+        const totalClasses = Math.max(0, Number(data.total_classes) || 0);
+        const attendancePercentage = totalClasses > 0
+            ? Math.min(100, (classesAttended / totalClasses) * 100)
             : 0;
 
         await client.query(
@@ -154,8 +157,8 @@ export async function createStudent(data: Partial<StudentFull>): Promise<ActionR
             [
                 studentDbId,
                 data.semester || null,
-                data.classes_attended || 0,
-                data.total_classes || 0,
+                classesAttended,
+                totalClasses,
                 attendancePercentage,
             ]
         );
