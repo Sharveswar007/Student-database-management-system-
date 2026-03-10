@@ -163,34 +163,42 @@ export async function createStudent(data: Partial<StudentFull>): Promise<ActionR
             ]
         );
 
-        // 5. Insert into assessments
+        // 5. Insert into assessments — clamp marks >= 0 (chk_marks_positive)
+        const internalMarks = Math.max(0, Number(data.internal_marks) || 0);
+        const quizMarks = Math.max(0, Number(data.quiz_marks) || 0);
+        const semesterMarks = Math.max(0, Number(data.semester_marks) || 0);
+        const totalMarks = internalMarks + quizMarks + semesterMarks;
+
         await client.query(
             `INSERT INTO assessments (student_id, semester, internal_marks, quiz_marks, semester_marks, total_marks, grade)
              VALUES ($1, $2, $3, $4, $5, $6, $7)`,
             [
                 studentDbId,
                 data.semester || null,
-                data.internal_marks || 0,
-                data.quiz_marks || 0,
-                data.semester_marks || 0,
-                data.total_marks || 0,
+                internalMarks,
+                quizMarks,
+                semesterMarks,
+                totalMarks,
                 data.grade || null,
             ]
         );
 
-        // 6. Insert into fee_records
-        const pendingDues = (Number(data.total_fees) || 0) - (Number(data.fees_paid) || 0) - (Number(data.scholarship_amount) || 0);
+        // 6. Insert into fee_records — clamp fees >= 0 (chk_fees_positive)
+        const totalFees = Math.max(0, Number(data.total_fees) || 0);
+        const feesPaid = Math.max(0, Number(data.fees_paid) || 0);
+        const scholarshipAmt = Math.max(0, Number(data.scholarship_amount) || 0);
+        const pendingDues = Math.max(0, totalFees - feesPaid - scholarshipAmt);
 
         await client.query(
             `INSERT INTO fee_records (student_id, total_fees, fees_paid, pending_dues, payment_status, scholarship_amount, scholarship_type)
              VALUES ($1, $2, $3, $4, $5, $6, $7)`,
             [
                 studentDbId,
-                data.total_fees || 0,
-                data.fees_paid || 0,
-                pendingDues > 0 ? pendingDues : 0,
+                totalFees,
+                feesPaid,
+                pendingDues,
                 pendingDues <= 0 ? 'Paid' : 'Pending',
-                data.scholarship_amount || 0,
+                scholarshipAmt,
                 data.scholarship_type || null,
             ]
         );
@@ -220,6 +228,128 @@ export async function deleteStudent(id: number): Promise<ActionResponse<void>> {
         return { success: true };
     } catch (error: any) {
         return { success: false, error: error.message };
+    }
+}
+
+// Update student — updates all 6 tables atomically
+export async function updateStudent(id: number, data: Partial<StudentFull>): Promise<ActionResponse<StudentFull>> {
+    const client = await getClient();
+    try {
+        await client.query('BEGIN');
+
+        // 1. Update core student record
+        await client.query(
+            `UPDATE students SET
+               full_name      = COALESCE($1, full_name),
+               date_of_birth  = $2,
+               gender         = $3,
+               address        = $4,
+               phone          = $5,
+               email          = $6,
+               admission_date = $7,
+               updated_at     = NOW()
+             WHERE id = $8`,
+            [
+                data.full_name || null,
+                data.date_of_birth || null,
+                data.gender || null,
+                data.address || null,
+                data.phone || null,
+                data.email || null,
+                data.admission_date || null,
+                id,
+            ]
+        );
+
+        // 2. Update guardian
+        await client.query(
+            `UPDATE guardians SET
+               guardian_name  = $1,
+               guardian_phone = $2,
+               guardian_email = $3
+             WHERE student_id = $4`,
+            [data.guardian_name || null, data.guardian_phone || null, data.guardian_email || null, id]
+        );
+
+        // 3. Update academic_records
+        const gpa = Math.min(10, Math.max(0, Number(data.gpa) || 0));
+        const cgpa = Math.min(10, Math.max(0, Number(data.cgpa) || 0));
+        await client.query(
+            `UPDATE academic_records SET
+               enrollment_status = $1,
+               academic_program  = $2,
+               department        = $3,
+               semester          = $4,
+               credit_hours      = $5,
+               gpa               = $6,
+               cgpa              = $7
+             WHERE student_id = $8`,
+            [
+                data.enrollment_status || 'Active',
+                data.academic_program || null,
+                data.department || null,
+                data.semester || null,
+                Math.max(0, Number(data.credit_hours) || 0),
+                gpa, cgpa, id,
+            ]
+        );
+
+        // 4. Update attendance
+        const classesAttended = Math.max(0, Number(data.classes_attended) || 0);
+        const totalClasses = Math.max(0, Number(data.total_classes) || 0);
+        const attendancePct = totalClasses > 0 ? Math.min(100, (classesAttended / totalClasses) * 100) : 0;
+        await client.query(
+            `UPDATE attendance SET
+               semester              = $1,
+               classes_attended      = $2,
+               total_classes         = $3,
+               attendance_percentage = $4
+             WHERE student_id = $5`,
+            [data.semester || null, classesAttended, totalClasses, attendancePct, id]
+        );
+
+        // 5. Update assessments
+        const internalMarks = Math.max(0, Number(data.internal_marks) || 0);
+        const quizMarks = Math.max(0, Number(data.quiz_marks) || 0);
+        const semesterMarks = Math.max(0, Number(data.semester_marks) || 0);
+        const totalMarks = internalMarks + quizMarks + semesterMarks;
+        await client.query(
+            `UPDATE assessments SET
+               semester       = $1,
+               internal_marks = $2,
+               quiz_marks     = $3,
+               semester_marks = $4,
+               total_marks    = $5,
+               grade          = $6
+             WHERE student_id = $7`,
+            [data.semester || null, internalMarks, quizMarks, semesterMarks, totalMarks, data.grade || null, id]
+        );
+
+        // 6. Update fee_records
+        const totalFees = Math.max(0, Number(data.total_fees) || 0);
+        const feesPaid = Math.max(0, Number(data.fees_paid) || 0);
+        const scholarshipAmt = Math.max(0, Number(data.scholarship_amount) || 0);
+        const pendingDues = Math.max(0, totalFees - feesPaid - scholarshipAmt);
+        await client.query(
+            `UPDATE fee_records SET
+               total_fees         = $1,
+               fees_paid          = $2,
+               pending_dues       = $3,
+               payment_status     = $4,
+               scholarship_amount = $5,
+               scholarship_type   = $6
+             WHERE student_id = $7`,
+            [totalFees, feesPaid, pendingDues, pendingDues <= 0 ? 'Paid' : 'Pending', scholarshipAmt, data.scholarship_type || null, id]
+        );
+
+        await client.query('COMMIT');
+        revalidatePath('/');
+        return await getStudentById(id);
+    } catch (error: any) {
+        await client.query('ROLLBACK');
+        return { success: false, error: error.message };
+    } finally {
+        client.release();
     }
 }
 

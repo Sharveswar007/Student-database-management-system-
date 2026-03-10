@@ -1,0 +1,111 @@
+﻿[dotenv@17.2.3] injecting env (1) from .env -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+≡ƒöä  Connecting to Neon PostgreSQL...
+node.exe : (node:29872) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as 
+aliases for 'verify-full'.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:29872) Wa... 'verify-full'.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, 
+which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Γ£à  Connected!
+
+≡ƒôï  Found 67 SQL statements to execute.
+
+[001] INSERT INTO students (student_id, full_name, date_of_birth, gender, phone, email... Γ£à  (INSERT ΓÇö 0 row(s) affected)
+[002] INSERT INTO guardians (student_id, guardian_name, guardian_phone, guardian_email... Γ£à  (INSERT ΓÇö 0 row(s) affected)
+[003] INSERT INTO academic_records (student_id, enrollment_status, academic_program, d... Γ£à  (INSERT ΓÇö 0 row(s) affected)
+[004] INSERT INTO attendance (student_id, semester, classes_attended, total_classes, a... Γ£à  (INSERT ΓÇö 0 row(s) affected)
+[005] INSERT INTO assessments (student_id, semester, internal_marks, quiz_marks, semes... Γ£à  (INSERT ΓÇö 0 row(s) affected)
+[006] INSERT INTO fee_records (student_id, total_fees, fees_paid, pending_dues, paymen... Γ£à  (INSERT ΓÇö 0 row(s) affected)
+[007] UPDATE academic_records... ΓÜá∩╕Å   Skipped (already exists): column "updated_at" of relation "academic_records" does not exist
+[008] UPDATE fee_records... Γ£à  (UPDATE ΓÇö 1 row(s) affected)
+[009] DELETE FROM students WHERE student_id = 'PBL999'... Γ£à  (DELETE ΓÇö 0 row(s) affected)
+[010] ALTER TABLE academic_records... ΓÜá∩╕Å   Skipped (already exists): constraint "chk_gpa_range" for relation "academic_records" already exists
+[011] ALTER TABLE attendance... ΓÜá∩╕Å   Skipped (already exists): constraint "chk_attendance_pct" for relation "attendance" already exists
+[012] ALTER TABLE assessments... ΓÜá∩╕Å   Skipped (already exists): constraint "chk_marks_positive" for relation "assessments" already exists
+[013] ALTER TABLE fee_records... ΓÜá∩╕Å   Skipped (already exists): constraint "chk_fees_positive" for relation "fee_records" already exists
+[014] ALTER TABLE students ALTER COLUMN full_name SET NOT NULL... Γ£à  (ALTER ΓÇö 0 row(s) affected)
+[015] UPDATE students s... Γ£à  (UPDATE ΓÇö 1 row(s) affected)
+[016] ALTER TABLE students DROP CONSTRAINT IF EXISTS uq_student_email... Γ£à  (ALTER ΓÇö 0 row(s) affected)
+[017] ALTER TABLE students ADD CONSTRAINT uq_student_email UNIQUE (email)... Γ£à  (ALTER ΓÇö 0 row(s) affected)
+[018] SELECT email AS contact_email, 'Student' AS type... Γ£à  (12 rows)
+[019] SELECT s.student_id, s.full_name... Γ£à  (SELECT ΓÇö 0 row(s) affected)
+[020] SELECT s.student_id, s.full_name... Γ£à  (5 rows)
+[021] SELECT s.student_id, s.full_name, ar.department, ar.gpa, f.payment_status... Γ£à  (8 rows)
+[022] SELECT s.student_id, s.full_name, att.attendance_percentage... Γ£à  (8 rows)
+[023] SELECT s.full_name, f.total_fees, f.pending_dues, f.payment_status... Γ£à  (8 rows)
+[024] SELECT s.student_id, s.full_name, f.total_fees, f.payment_status... Γ£à  (8 rows)
+[025] SELECT a.full_name AS student_1, b.full_name AS student_2, ar1.department... Γ£à  (10 rows)
+[026] SELECT s.student_id, s.full_name, ar.gpa... Γ£à  (6 rows)
+[027] SELECT s.student_id, s.full_name, ar.department, f.pending_dues... Γ£à  (1 rows)
+[028] SELECT s.student_id, s.full_name... Γ£à  (3 rows)
+[029] SELECT s.student_id, s.full_name... Γ£à  (2 rows)
+[030] SELECT s.student_id, s.full_name,... Γ£à  (8 rows)
+[031] WITH low_attendance AS (... Γ£à  (SELECT ΓÇö 0 row(s) affected)
+[032] WITH RECURSIVE semester_series AS (... Γ£à  (8 rows)
+[033] CREATE OR REPLACE VIEW vw_student_full_profile AS... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[034] CREATE OR REPLACE VIEW vw_at_risk_students AS... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[035] CREATE OR REPLACE VIEW vw_department_toppers AS... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[036] SELECT * FROM vw_student_full_profile... Γ£à  (8 rows)
+[037] SELECT * FROM vw_at_risk_students... Γ£à  (5 rows)
+     {"student_id":"RA2411003011058","full_name":"magi","department":null,"attendance_percentage":"0.00","pending_dues":"0.00","payment_status":"Paid"}
+     {"student_id":"PBL002","full_name":"Priya Nair","department":"ECE","attendance_percentage":"97.50","pending_dues":"5000.00","payment_status":"Pending"}
+     {"student_id":"PBL003","full_name":"Rahul Verma","department":"CSE","attendance_percentage":"68.75","pending_dues":"0.00","payment_status":"Paid"}
+     {"student_id":"PBL005","full_name":"Kiran Reddy","department":"CSE","attendance_percentage":"93.75","pending_dues":"20000.00","payment_status":"Pending"}
+     {"student_id":"PBL010","full_name":"Test Student","department":"CSE","attendance_percentage":"0.00","pending_dues":"0.00","payment_status":"Paid"}
+[038] SELECT * FROM vw_department_toppers... Γ£à  (4 rows)
+     {"department":"CSE","student_id":"RA2411003011059","full_name":"SHARVESWAR .M","gpa":"10.00","cgpa":"10.00"}
+     {"department":"ECE","student_id":"PBL002","full_name":"Priya Nair","gpa":"9.00","cgpa":"8.90"}
+     {"department":"MECH","student_id":"PBL004","full_name":"Sneha Pillai","gpa":"6.80","cgpa":"7.10"}
+     {"department":null,"student_id":"RA2411003011058","full_name":"magi","gpa":"0.00","cgpa":"0.00"}
+[039] CREATE OR REPLACE FUNCTION fn_calculate_grade(total_marks DECIMAL)... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[040] CREATE OR REPLACE FUNCTION fn_get_student_report(p_student_id VARCHAR)... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[041] CREATE OR REPLACE FUNCTION fn_department_student_count(p_department VARCHAR)... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[042] CREATE OR REPLACE FUNCTION fn_calculate_pending_dues(... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[043] SELECT fn_calculate_grade(85.5)... Γ£à  (1 rows)
+[044] SELECT * FROM fn_get_student_report('PBL001')... Γ£à  (1 rows)
+     {"student_id":"PBL001","full_name":"Arjun Sharma","department":"CSE","gpa":"8.50","attendance_pct":"90.00","grade":"O","payment_status":"Paid","pending_dues":"0.00"}
+[045] SELECT fn_department_student_count('CSE')... Γ£à  (1 rows)
+     {"fn_department_student_count":5}
+[046] SELECT fn_calculate_pending_dues(80000, 60000, 5000)... Γ£à  (1 rows)
+     {"fn_calculate_pending_dues":"15000"}
+[047] CREATE OR REPLACE FUNCTION trg_fn_update_attendance_pct()... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[048] DROP TRIGGER IF EXISTS trg_update_attendance_pct ON attendance... Γ£à  (DROP ΓÇö 0 row(s) affected)
+[049] CREATE TRIGGER trg_update_attendance_pct... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[050] CREATE OR REPLACE FUNCTION trg_fn_update_pending_dues()... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[051] DROP TRIGGER IF EXISTS trg_update_pending_dues ON fee_records... Γ£à  (DROP ΓÇö 0 row(s) affected)
+[052] CREATE TRIGGER trg_update_pending_dues... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[053] CREATE OR REPLACE FUNCTION trg_fn_assign_grade()... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[054] DROP TRIGGER IF EXISTS trg_assign_grade ON assessments... Γ£à  (DROP ΓÇö 0 row(s) affected)
+[055] CREATE TRIGGER trg_assign_grade... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[056] CREATE TABLE IF NOT EXISTS student_audit_log (... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[057] CREATE OR REPLACE FUNCTION trg_fn_audit_student_delete()... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[058] DROP TRIGGER IF EXISTS trg_audit_student_delete ON students... Γ£à  (DROP ΓÇö 0 row(s) affected)
+[059] CREATE TRIGGER trg_audit_student_delete... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[060] CREATE OR REPLACE FUNCTION fn_cursor_active_students_report()... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[061] CREATE OR REPLACE FUNCTION fn_cursor_refresh_all_grades()... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[062] SELECT fn_cursor_active_students_report()... Γ£à  (1 rows)
+[063] SELECT fn_cursor_refresh_all_grades()... Γ£à  (1 rows)
+     {"fn_cursor_refresh_all_grades":8}
+[064] CREATE OR REPLACE FUNCTION fn_safe_enroll_student(... Γ£à  (CREATE ΓÇö 0 row(s) affected)
+[065] SELECT fn_safe_enroll_student('PBL010', 'Test Student', 'test@mail.com', 'CSE',... Γ£à  (1 rows)
+[066] SELECT fn_safe_enroll_student('PBL001', 'Duplicate', 'dup@mail.com', 'CSE', '1')... Γ£à  (1 rows)
+[067] SELECT fn_safe_enroll_student('PBL011', '', 'empty@mail.com', 'CSE', '1')... Γ£à  (1 rows)
+
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+Γ£à  Passed  : 62
+ΓÜá∩╕Å   Skipped : 5
+Γ¥î  Failed  : 0
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+
+≡ƒÄë  All PBL II Review 2 SQL queries pushed to Neon successfully!
